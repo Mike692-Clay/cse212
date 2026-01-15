@@ -170,3 +170,54 @@ public class TakingTurnsQueueTests
         }
     }
 }
+
+
+==============================================================
+Correction: 
+
+    using System;
+using System.Collections.Generic;
+
+public class TakingTurnsQueue
+{
+    private Queue<Person> _queue = new Queue<Person>();
+
+    public int Length
+    {
+        get { return _queue.Count; }
+    }
+
+    // Enqueue a person
+    public void AddPerson(string name, int turns)
+    {
+        _queue.Enqueue(new Person(name, turns));
+    }
+
+    // Dequeue the next person and re-enqueue if appropriate
+    public Person GetNextPerson()
+    {
+        if (_queue.Count == 0)
+        {
+            throw new InvalidOperationException("No one in the queue.");
+        }
+
+        Person person = _queue.Dequeue();
+
+        // Infinite turns (0 or less)
+        if (person.Turns <= 0)
+        {
+            _queue.Enqueue(person);
+            return person;
+        }
+
+        // Finite turns
+        person.Turns--;
+
+        if (person.Turns > 0)
+        {
+            _queue.Enqueue(person);
+        }
+
+        return person;
+    }
+}
