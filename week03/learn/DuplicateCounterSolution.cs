@@ -1,7 +1,7 @@
-﻿public class DuplicateCounterSolution
+public class DuplicateCounterSolution
 {
-    //CSE 212 Lesson 5C Solved
-    //Count how many duplicates are in a collection of data.
+    // CSE 212 Lesson 5C Solved
+    // Count how many duplicates are in a collection of data.
 
     public static void Run()
     {
@@ -30,16 +30,19 @@
     /// </summary>
     private static int CountDuplicates(int[] data)
     {
-        // Add code here.
         var unique = new HashSet<int>();
         var duplicates = 0;
 
-        foreach (var x in data)
+        foreach (var value in data)
         {
-            if (unique.Contains(x))
+            if (unique.Contains(value))
+            {
                 duplicates++;
+            }
             else
-                unique.Add(x);
+            {
+                unique.Add(value);
+            }
         }
 
         return duplicates;
