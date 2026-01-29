@@ -1,18 +1,189 @@
+using System.Collections;
+using System.Collections.Generic;
 
-<Project Sdk="Microsoft.NET.Sdk">
-   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
+public class LinkedList : IEnumerable<int>
+{
+    private class Node
+    {
+        public int Data;
+        public Node? Next;
 
-    <IsPackable>false</IsPackable>
-    <IsTestProject>true</IsTestProject>
-  </PropertyGroup>
+        public Node(int data)
+        {
+            Data = data;
+            Next = null;
+        }
+    }
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.0" />
-    <PackageReference Include="MSTest.TestAdapter" Version="3.0.4" />
-    <PackageReference Include="MSTest.TestFramework" Version="3.0.4" />
-  </ItemGroup>
+    private Node? Head;
+    private Node? Tail;
 
-</Project>
+    public void InsertHead(int value)
+    {
+        Node newNode = new Node(value);
+
+        if (Head == null)
+        {
+            Head = newNode;
+            Tail = newNode;
+            return;
+        }
+
+        newNode.Next = Head;
+        Head = newNode;
+    }
+
+    public void InsertTail(int value)
+    {
+        Node newNode = new Node(value);
+
+        if (Head == null)
+        {
+            Head = newNode;
+            Tail = newNode;
+            return;
+        }
+
+        Tail!.Next = newNode;
+        Tail = newNode;
+    }
+
+    public void RemoveTail()
+    {
+        if (Head == null)
+            return;
+
+        if (Head == Tail)
+        {
+            Head = null;
+            Tail = null;
+            return;
+        }
+
+        Node current = Head;
+
+        while (current.Next != Tail)
+        {
+            current = current.Next!;
+        }
+
+        current.Next = null;
+        Tail = current;
+    }
+
+    public void Remove(int value)
+    {
+        if (Head == null)
+            return;
+
+        if (Head.Data == value)
+        {
+            if (Head == Tail)
+            {
+                Head = null;
+                Tail = null;
+            }
+            else
+            {
+                Head = Head.Next;
+            }
+            return;
+        }
+
+        Node current = Head;
+
+        while (current.Next != null)
+        {
+            if (current.Next.Data == value)
+            {
+                if (current.Next == Tail)
+                {
+                    Tail = current;
+                }
+
+                current.Next = current.Next.Next;
+                return;
+            }
+
+            current = current.Next;
+        }
+    }
+
+    public void Replace(int oldValue, int newValue)
+    {
+        Node? current = Head;
+
+        while (current != null)
+        {
+            if (current.Data == oldValue)
+            {
+                current.Data = newValue;
+            }
+
+            current = current.Next;
+        }
+    }
+
+    public IEnumerable<int> Reverse()
+    {
+        var stack = new Stack<int>();
+        Node? current = Head;
+
+        while (current != null)
+        {
+            stack.Push(current.Data);
+            current = current.Next;
+        }
+
+        while (stack.Count > 0)
+        {
+            yield return stack.Pop();
+        }
+    }
+
+    public bool HeadAndTailAreNull()
+    {
+        return Head == null && Tail == null;
+    }
+
+    public bool HeadAndTailAreNotNull()
+    {
+        return Head != null && Tail != null;
+    }
+
+    public override string ToString()
+    {
+        if (Head == null)
+            return "<LinkedList>{}";
+
+        var current = Head;
+        var values = new List<int>();
+
+        while (current != null)
+        {
+            values.Add(current.Data);
+            current = current.Next;
+        }
+
+        return $"<LinkedList>{{{string.Join(", ", values)}}}";
+    }
+
+    // Enables foreach (forward iteration)
+    public IEnumerator<int> GetEnumerator()
+    {
+        Node? current = Head;
+
+        while (current != null)
+        {
+            yield return current.Data;
+            current = current.Next;
+        }
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
+    }
+}
+
+
